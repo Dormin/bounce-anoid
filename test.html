@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>BounceAnoid</title>
+    <style type="text/css">
+      #view {
+        display: block;
+        margin: 0px auto;
+      }
+    </style>
+    <script src="require.js"></script>
+  </head>
+  <body>
+    <canvas id="view" width="192" height="256"></canvas>
+    <script>
+      require(['./scripts/bounce-anoid'], function (bounceAnoid) {
+
+        var canvas = document.getElementById('view')
+        bounceAnoid.run(canvas)
+      })
+    </script>
+  </body>
+</html>
