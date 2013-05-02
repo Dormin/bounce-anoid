@@ -40,6 +40,8 @@ define(['./utilities', 'exports'], function (utilities, exports) {
 
     var image = images[name]
 
+    if (!image) { return }
+
     x = x || 0
     y = y || 0
 

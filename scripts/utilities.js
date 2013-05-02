@@ -88,6 +88,20 @@ define(['exports'], function (exports) {
   exports.forOwn = forOwn
 
   //
+  // Calls the iterator function for each integer in the range [start, end]
+  //
+  function forRange(start, end, iterator) {
+
+    var i
+
+    for (i = start; i <= end; i++) {
+
+      iterator(i)
+    }
+  }
+  exports.forRange = forRange
+
+  //
   // Returns the integer part of a number
   //
   function integer(n) {
