@@ -82,14 +82,14 @@ define({
         , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
         , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
         , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 } ]
-      , [ { type: 'empty', frame: 0 }, { type: 'solid', frame: 0 }
-        , { type: 'solid', frame: 0 }, { type: 'empty', frame: 0 }
-        , { type: 'empty', frame: 0 }, { type: 'solid', frame: 0 }
-        , { type: 'solid', frame: 0 }, { type: 'empty', frame: 0 } ]
-      , [ { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
+      , [ { type: 'empty', frame: 0 }, { type: 'solid-4', frame: 0 }
+        , { type: 'solid-0', frame: 0 }, { type: 'empty', frame: 0 }
+        , { type: 'empty', frame: 0 }, { type: 'solid-0', frame: 0 }
+        , { type: 'solid-3', frame: 0 }, { type: 'empty', frame: 0 } ]
+      , [ { type: 'fallthrough', frame: 0 }, { type: 'solid-1', frame: 0 }
         , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
         , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
-        , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 } ]
+        , { type: 'solid-2', frame: 0 }, { type: 'fallthrough', frame: 0 } ]
       , [ { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
         , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
         , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }

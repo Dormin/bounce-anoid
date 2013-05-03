@@ -203,7 +203,6 @@ define(['./utilities', 'exports'], function (utilities, exports) {
 
   function handleBallWallsInteraction(ballData, wallList) {
 
-    // wd - wall data
     forEach(wallList, function (wallData) {
 
       handleBallWallInteraction(ballData, wallData)
@@ -246,21 +245,99 @@ define(['./utilities', 'exports'], function (utilities, exports) {
     return false
   }
 
+  function slopeCollision(ballData, x, y, size, nx, ny, d, result) {
+
+    var p  = ballData.position
+      , r  = ballData.radius
+      , tx = p.x - x
+      , ty = p.y - y
+      , t  = max((tx * nx + ty * ny - d) / 2, 0)
+      , dx = p.x - clamp(p.x - t * nx, x, x + size)
+      , dy = p.y - clamp(p.y - t * ny, y, y + size)
+      , d2 = dx * dx + dy * dy
+
+    if (d2 <= r * r) {
+
+      d2 = sqrt(d2)
+
+      result.d  = r - d2
+      result.nx = dx / d2
+      result.ny = dy / d2
+
+      return true
+    }
+
+    return false
+  }
+
+  function slopeCollision1(ballData, x, y, size, result) {
+
+    return slopeCollision(ballData, x, y, size, 1, 1, size, result)
+  }
+
+  function slopeCollision2(ballData, x, y, size, result) {
+
+    return slopeCollision(ballData, x, y, size, -1, 1, 0, result)
+  }
+
+  function slopeCollision3(ballData, x, y, size, result) {
+
+    return slopeCollision(ballData, x, y, size, 1, -1, 0, result)
+  }
+
+  function slopeCollision4(ballData, x, y, size, result) {
+
+    return slopeCollision(ballData, x, y, size, -1, -1, -size, result)
+  }
+
+  function fallthroughCollision(ballData, x, y, size, result) {
+
+    var p  = ballData.position
+      , v  = ballData.velocity
+      , r  = ballData.radius
+      , dx = p.x - clamp(p.x, x, x + size)
+      , dy = p.y - (y + size)
+      , d  = dx * dx + dy * dy
+
+    if (d <= r * r && dy > 0 && v.y < 0) {
+
+      d = sqrt(d)
+
+      result.d  = r - d
+      result.nx = dx / d
+      result.ny = dy / d
+
+      return true
+    }
+
+    return false
+  }
+
   var brickCollision = {
-    'empty': noCollision
-  , 'solid': squareCollision
+    'empty'       : noCollision
+  , 'solid-0'     : squareCollision
+  , 'solid-1'     : slopeCollision1
+  , 'solid-2'     : slopeCollision2
+  , 'solid-3'     : slopeCollision3
+  , 'solid-4'     : slopeCollision4
+  , 'fallthrough' : fallthroughCollision
   }
 
   var brickOnCollision = {
-    'solid': doNothing
+    'solid-0'     : doNothing
+  , 'solid-1'     : doNothing
+  , 'solid-2'     : doNothing
+  , 'solid-3'     : doNothing
+  , 'solid-4'     : doNothing
+  , 'fallthrough' : doNothing
   }
 
   var brickElasticity = {
-    'solid': 0.75
+    'default' : 0.75
   }
 
   var brickFriction = {
-    'solid': 0.0001
+    'default' : 0.0001
   }
 
   function handleBallBrickCollision(ballData, collisionData) {
@@ -284,8 +361,8 @@ define(['./utilities', 'exports'], function (utilities, exports) {
       , collisionData.ny
       , ballData.inertia
       , ballData.radius
-      , brickElasticity[type]
-      , brickFriction[type]
+      , brickElasticity[type] || brickElasticity['default']
+      , brickFriction[type] || brickFriction['default']
       )
     }
   }
@@ -294,7 +371,7 @@ define(['./utilities', 'exports'], function (utilities, exports) {
 
     var p             = ballData.position
       , r             = ballData.radius
-      , brickGrid     = gridData.brick // Brick grid
+      , brickGrid     = gridData.brick
       , cellSize      = gridData.cellSize
       , left          = max(floor((p.x - r) / cellSize), 0)
       , right         = min(floor((p.x + r) / cellSize), gridData.nCells.x - 1)

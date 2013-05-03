@@ -66,13 +66,23 @@ define(['./graphics', './utilities', 'exports'], function (graphics, utilities
   }
 
   var brickImage = {
-    'empty': ''
-  , 'solid': 'brick-solid'
+    'empty'       : ''
+  , 'solid-0'     : 'brick-solid-0'
+  , 'solid-1'     : 'brick-solid-1'
+  , 'solid-2'     : 'brick-solid-2'
+  , 'solid-3'     : 'brick-solid-3'
+  , 'solid-4'     : 'brick-solid-4'
+  , 'fallthrough' : 'brick-fallthrough'
   }
 
   var brickShadow = {
-    'empty': ''
-  , 'solid': 'shadow-brick'
+    'empty'       : ''
+  , 'solid-0'     : 'shadow-brick-0'
+  , 'solid-1'     : 'shadow-brick-1'
+  , 'solid-2'     : 'shadow-brick-2'
+  , 'solid-3'     : 'shadow-brick-3'
+  , 'solid-4'     : 'shadow-brick-4'
+  , 'fallthrough' : 'shadow-fallthrough'
   }
 
   function forEachCell(gridData, iterator) {
@@ -120,21 +130,21 @@ define(['./graphics', './utilities', 'exports'], function (graphics, utilities
 
   function drawGameplay(gameplayData) {
 
-    var bd = gameplayData.ball
-      , gd = gameplayData.grid
-      , pd = gameplayData.pad
+    var ballData = gameplayData.ball
+      , gridData = gameplayData.grid
+      , padData  = gameplayData.pad
 
     graphics.draw('background')
 
-    drawPadArea(pd)
+    drawPadArea(padData)
 
-    drawBallShadow(bd)
-    drawPadShadow(pd)
-    drawBrickShadows(gd)
+    drawBallShadow(ballData)
+    drawPadShadow(padData)
+    drawBrickShadows(gridData)
 
-    drawBall(bd)
-    drawPad(pd)
-    drawBricks(gd)
+    drawBall(ballData)
+    drawPad(padData)
+    drawBricks(gridData)
   }
   exports.gameplay = drawGameplay
 
