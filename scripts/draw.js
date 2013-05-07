@@ -1,5 +1,5 @@
-define(['./graphics', './utilities', 'exports'], function (graphics, utilities
-, exports) {
+define(['./effect', './graphics', './grid', 'exports'], function (effect
+, graphics, grid, exports) {
 // ----------------------------------------------------------------------------
 
   "use strict"
@@ -7,20 +7,29 @@ define(['./graphics', './utilities', 'exports'], function (graphics, utilities
   var cos = Math.cos
     , sin = Math.sin
 
-  var repeat = utilities.repeat
-
   var dotAlpha     = 0.25
     , lineAlpha    = 0.25
     , padAreaAlpha = 0.15
     , shadowAlpha  = 0.25
     , shadowOffset = { x: 2, y: 2 }
 
-  function drawBall(ballData) {
+  function drawShadow(image, align, x, y) {
 
-    var r = ballData.radius
-      , x = ballData.position.x
-      , y = ballData.position.y
-      , a = ballData.position.a
+    graphics.draw(
+      image
+    , align
+    , x + shadowOffset.x
+    , y + shadowOffset.y
+    , shadowAlpha
+    )
+  }
+
+  function drawBall(data) {
+
+    var r = data.radius
+      , x = data.position.x
+      , y = data.position.y
+      , a = data.position.a
 
     graphics.draw('ball', 'center', x, y)
 
@@ -29,122 +38,130 @@ define(['./graphics', './utilities', 'exports'], function (graphics, utilities
     graphics.draw('dot', 'center', x, y, dotAlpha)
   }
 
-  function drawBallShadow(ballData) {
+  function drawBallShadow(data) {
 
-    graphics.draw(
-      'shadow-ball'
-    , 'center'
-    , ballData.position.x + shadowOffset.x
-    , ballData.position.y + shadowOffset.y
-    , shadowAlpha
-    )
+    var p = data.position
+
+    drawShadow('shadow-ball', 'center', p.x, p.y)
   }
 
-  function drawPad(padData) {
+  function drawPad(data) {
 
-    graphics.draw('pad', 'center', padData.position.x, padData.position.y)
+    var p = data.position
+
+    graphics.draw('pad', 'center', p.x, p.y)
   }
 
-  function drawPadShadow(padData) {
+  function drawPadShadow(data) {
 
-    graphics.draw(
-      'shadow-pad'
-    , 'center'
-    , padData.position.x + shadowOffset.x
-    , padData.position.y + shadowOffset.y
-    , shadowAlpha
-    )
+    var p = data.position
+
+    drawShadow('shadow-pad', 'center', p.x, p.y)
   }
 
-  function drawPadArea(padData) {
+  function drawPadArea(data) {
 
-    var x = padData.boundary.left
-      , y = padData.boundary.top - padData.radius
+    var x = data.boundary.left
+      , y = data.boundary.top - data.radius
 
     graphics.draw('pad-area', 'top-left', x, y, padAreaAlpha)
     graphics.draw('line', 'top-left', x, y, lineAlpha)
   }
 
   var brickImage = {
-    'empty'       : ''
+    'none'        : ''
   , 'solid-0'     : 'brick-solid-0'
   , 'solid-1'     : 'brick-solid-1'
   , 'solid-2'     : 'brick-solid-2'
   , 'solid-3'     : 'brick-solid-3'
   , 'solid-4'     : 'brick-solid-4'
   , 'fallthrough' : 'brick-fallthrough'
+  , 'color-1'     : 'brick-color-1'
+  , 'color-2'     : 'brick-color-2'
+  , 'color-3'     : 'brick-color-3'
+  , 'color-4'     : 'brick-color-4'
+  , 'color-5'     : 'brick-color-5'
   }
 
   var brickShadow = {
-    'empty'       : ''
+    'none'        : ''
   , 'solid-0'     : 'shadow-brick-0'
   , 'solid-1'     : 'shadow-brick-1'
   , 'solid-2'     : 'shadow-brick-2'
   , 'solid-3'     : 'shadow-brick-3'
   , 'solid-4'     : 'shadow-brick-4'
   , 'fallthrough' : 'shadow-fallthrough'
+  , 'color-1'     : 'shadow-brick-0'
+  , 'color-2'     : 'shadow-brick-0'
+  , 'color-3'     : 'shadow-brick-0'
+  , 'color-4'     : 'shadow-brick-0'
+  , 'color-5'     : 'shadow-brick-0'
   }
 
-  function forEachCell(gridData, iterator) {
+  function drawBricks(data) {
 
-    repeat(gridData.nCells.y, function (y) {
+    grid.forEachCell(data, function (cell, x, y) {
 
-      repeat(gridData.nCells.x, function (x) {
-
-        iterator(x, y)
-      })
+      graphics.draw(brickImage[cell.brick], 'top-left', x, y)
     })
   }
 
-  function drawBricks(gridData) {
+  function drawBrickShadows(data) {
 
-    var brickGrid = gridData.brick
-      , size      = gridData.cellSize
+    grid.forEachCell(data, function (cell, x, y) {
 
-    forEachCell(gridData, function (x, y) {
-
-      var type = brickGrid[y][x].type
-
-      graphics.draw(brickImage[type], 'top-left', x * size, y * size)
+      drawShadow(brickShadow[cell.brick], 'top-left', x, y)
     })
   }
 
-  function drawBrickShadows(gridData) {
+  function drawNothing() {
 
-    var brickGrid = gridData.brick
-      , size      = gridData.cellSize
+    // Do nothing...
+  }
 
-    forEachCell(gridData, function (x, y) {
+  function drawFlicker(x, y, frame) {
 
-      var type = brickGrid[y][x].type
+    var a
+      , life = effect.lifespan['flicker']
 
-      graphics.draw(
-        brickShadow[type]
-      , 'top-left'
-      , x * size + shadowOffset.x
-      , y * size + shadowOffset.y
-      , shadowAlpha
-      )
+    if (frame % 4 === 0) {
+
+      a = 0.5 - frame / life * 0.5
+
+      y = y - frame / 5 + frame * frame / 40
+
+      graphics.draw('effect-flicker', 'top-left', x, y, a)
+    }
+  }
+
+  var drawEffect = {
+    'none'    : drawNothing
+  , 'flicker' : drawFlicker
+  }
+
+  function drawEffects(data, frame) {
+
+    grid.forEachCell(data, function (cell, x, y) {
+
+      drawEffect[cell.effect](x, y, frame - cell.frame)
     })
   }
 
-  function drawGameplay(gameplayData) {
-
-    var ballData = gameplayData.ball
-      , gridData = gameplayData.grid
-      , padData  = gameplayData.pad
+  function drawGameplay(data) {
 
     graphics.draw('background')
 
-    drawPadArea(padData)
+    drawPadArea(data.pad)
 
-    drawBallShadow(ballData)
-    drawPadShadow(padData)
-    drawBrickShadows(gridData)
+    drawBallShadow(data.ball)
+    drawPadShadow(data.pad)
+    drawBrickShadows(data.grid)
 
-    drawBall(ballData)
-    drawPad(padData)
-    drawBricks(gridData)
+    drawBall(data.ball)
+    drawPad(data.pad)
+    drawBricks(data.grid)
+
+    drawEffects(data.grid, data.frame)
   }
   exports.gameplay = drawGameplay
 

@@ -46,7 +46,7 @@ define({
     , force    : { x: 0, y: 0 } // "Force" (but not really)
     }
 
-  , walls: [
+  , edges: [
 
       // Left
       { elasticity : 0.75
@@ -69,39 +69,55 @@ define({
       nCells   : { x: 8, y: 6 }
     , cellSize : 24
 
-    , brick:
-      [ [ { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
-        , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
-        , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
-        , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 } ]
-      , [ { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
-        , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
-        , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
-        , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 } ]
-      , [ { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
-        , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
-        , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
-        , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 } ]
-      , [ { type: 'empty', frame: 0 }, { type: 'solid-4', frame: 0 }
-        , { type: 'solid-0', frame: 0 }, { type: 'empty', frame: 0 }
-        , { type: 'empty', frame: 0 }, { type: 'solid-0', frame: 0 }
-        , { type: 'solid-3', frame: 0 }, { type: 'empty', frame: 0 } ]
-      , [ { type: 'fallthrough', frame: 0 }, { type: 'solid-1', frame: 0 }
-        , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
-        , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
-        , { type: 'solid-2', frame: 0 }, { type: 'fallthrough', frame: 0 } ]
-      , [ { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
-        , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
-        , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 }
-        , { type: 'empty', frame: 0 }, { type: 'empty', frame: 0 } ] ]
-
-    , force:
-      [ ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none']
-      , ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none']
-      , ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none']
-      , ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none']
-      , ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none']
-      , ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none'] ]
+    , cells:
+      [ [ { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 } ]
+      , [ { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 } ]
+      , [ { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 } ]
+      , [ { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 } ]
+      , [ { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 } ]
+      , [ { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 }
+        , { brick: 'none', force: 'none', effect: 'none', frame: 0 } ] ]
     }
   }
 })
