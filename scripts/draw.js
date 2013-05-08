@@ -76,11 +76,13 @@ define(['./effect', './graphics', './grid', 'exports'], function (effect
   , 'solid-3'     : 'brick-solid-3'
   , 'solid-4'     : 'brick-solid-4'
   , 'fallthrough' : 'brick-fallthrough'
+  , 'bounce'      : 'brick-bounce'
   , 'color-1'     : 'brick-color-1'
   , 'color-2'     : 'brick-color-2'
   , 'color-3'     : 'brick-color-3'
   , 'color-4'     : 'brick-color-4'
   , 'color-5'     : 'brick-color-5'
+  , 'glass'       : 'brick-glass'
   }
 
   var brickShadow = {
@@ -91,11 +93,13 @@ define(['./effect', './graphics', './grid', 'exports'], function (effect
   , 'solid-3'     : 'shadow-brick-3'
   , 'solid-4'     : 'shadow-brick-4'
   , 'fallthrough' : 'shadow-fallthrough'
+  , 'bounce'      : 'shadow-bounce'
   , 'color-1'     : 'shadow-brick-0'
   , 'color-2'     : 'shadow-brick-0'
   , 'color-3'     : 'shadow-brick-0'
   , 'color-4'     : 'shadow-brick-0'
   , 'color-5'     : 'shadow-brick-0'
+  , 'glass'       : 'shadow-brick-0'
   }
 
   function drawBricks(data) {
@@ -119,31 +123,68 @@ define(['./effect', './graphics', './grid', 'exports'], function (effect
     // Do nothing...
   }
 
-  function drawFlicker(x, y, frame) {
+  function drawBounce(x, y, size, frame) {
 
-    var a
-      , life = effect.lifespan['flicker']
+    if (frame < effect.lifespan['bounce'] / 2) {
+
+      graphics.draw('effect-bounce-0', 'top-left', x - 2, y - 2)
+
+    } else {
+
+      graphics.draw('effect-bounce-1', 'top-left', x - 1, y - 1)
+    }
+  }
+
+  function drawFlicker(x, y, size, frame) {
+
+    var alpha
 
     if (frame % 4 === 0) {
 
-      a = 0.5 - frame / life * 0.5
+      alpha = 0.5 - frame / effect.lifespan['flicker'] * 0.5
 
       y = y - frame / 5 + frame * frame / 40
 
-      graphics.draw('effect-flicker', 'top-left', x, y, a)
+      graphics.draw('effect-flicker', 'top-left', x, y, alpha)
+    }
+  }
+
+  function drawScatter(x, y, size, frame) {
+
+    var alpha, gx, gy
+
+    if (frame % 4 === 0) {
+
+      alpha = 0.5 - frame / effect.lifespan['scatter'] * 0.5
+
+      gy = y - frame / 3 + frame * frame / 40
+      gx = x - frame / 8
+      graphics.draw('effect-scatter', 'top-left', gx, gy, alpha)
+
+      gx = x + frame / 8 + size / 2
+      graphics.draw('effect-scatter', 'top-left', gx, gy, alpha)
+
+      gy = y + frame * frame / 40 + size / 2
+      gx = x - frame / 6
+      graphics.draw('effect-scatter', 'top-left', gx, gy, alpha)
+
+      gx = x + frame / 6 + size / 2
+      graphics.draw('effect-scatter', 'top-left', gx, gy, alpha)
     }
   }
 
   var drawEffect = {
     'none'    : drawNothing
+  , 'bounce'  : drawBounce
   , 'flicker' : drawFlicker
+  , 'scatter' : drawScatter
   }
 
   function drawEffects(data, frame) {
 
     grid.forEachCell(data, function (cell, x, y) {
 
-      drawEffect[cell.effect](x, y, frame - cell.frame)
+      drawEffect[cell.effect](x, y, data.cellSize, frame - cell.frame)
     })
   }
 

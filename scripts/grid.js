@@ -60,7 +60,8 @@ define(['./utilities', 'exports'], function (utilities, exports) {
   exports.reset = reset
 
   var brickTypes = ['solid-0', 'solid-1', 'solid-2', 'solid-3', 'solid-4'
-  , 'fallthrough', 'color-1', 'color-2', 'color-3', 'color-4', 'color-5']
+  , 'fallthrough', 'bounce', 'color-1', 'color-2', 'color-3', 'color-4'
+  , 'color-5', 'glass']
 
   function randomize(gridData) {
 

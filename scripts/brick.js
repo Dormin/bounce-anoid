@@ -108,6 +108,14 @@ define(['./utilities', 'exports'], function (utilities, exports) {
     // Do nothing...
   }
 
+  function bounce(ballData, collisionData, frame) {
+
+    var cell = collisionData.cell
+
+    cell.effect = 'bounce'
+    cell.frame  = frame
+  }
+
   function flickerAndDestroy(ballData, collisionData, frame) {
 
     var cell = collisionData.cell
@@ -115,6 +123,21 @@ define(['./utilities', 'exports'], function (utilities, exports) {
     cell.brick  = 'none'
     cell.effect = 'flicker'
     cell.frame  = frame
+  }
+
+  function scatterAndDestroy(ballData, collisionData, frame) {
+
+    var cell = collisionData.cell
+      , v    = ballData.velocity
+      , nx   = collisionData.nx
+      , ny   = collisionData.ny
+
+    if (v.x * nx + v.y * ny <= -1) {
+
+      cell.brick  = 'none'
+      cell.effect = 'scatter'
+      cell.frame  = frame
+    }
   }
 
   exports.collision = {
@@ -125,11 +148,13 @@ define(['./utilities', 'exports'], function (utilities, exports) {
   , 'solid-3'     : slopeCollision3
   , 'solid-4'     : slopeCollision4
   , 'fallthrough' : fallthroughCollision
+  , 'bounce'      : squareCollision
   , 'color-1'     : squareCollision
   , 'color-2'     : squareCollision
   , 'color-3'     : squareCollision
   , 'color-4'     : squareCollision
   , 'color-5'     : squareCollision
+  , 'glass'       : squareCollision
   }
 
   exports.onCollision = {
@@ -139,15 +164,18 @@ define(['./utilities', 'exports'], function (utilities, exports) {
   , 'solid-3'     : doNothing
   , 'solid-4'     : doNothing
   , 'fallthrough' : doNothing
+  , 'bounce'      : bounce
   , 'color-1'     : flickerAndDestroy
   , 'color-2'     : flickerAndDestroy
   , 'color-3'     : flickerAndDestroy
   , 'color-4'     : flickerAndDestroy
   , 'color-5'     : flickerAndDestroy
+  , 'glass'       : scatterAndDestroy
   }
 
   exports.elasticity = {
     'default' : 0.75
+  , 'bounce'  : 1.5
   }
 
   exports.friction = {

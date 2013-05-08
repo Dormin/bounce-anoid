@@ -4,7 +4,9 @@ define(['exports'], function (exports) {
   "use strict"
 
   var lifespan = {
-    'flicker' : 30
+    'bounce'  : 4
+  , 'flicker' : 20
+  , 'scatter' : 30
   }
   exports.lifespan = lifespan
 
