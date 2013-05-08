@@ -8,6 +8,7 @@ define(['./effect', './graphics', './grid', 'exports'], function (effect
     , sin = Math.sin
 
   var dotAlpha     = 0.25
+    , forceAlpha   = 0.5
     , lineAlpha    = 0.25
     , padAreaAlpha = 0.15
     , shadowAlpha  = 0.25
@@ -66,6 +67,28 @@ define(['./effect', './graphics', './grid', 'exports'], function (effect
 
     graphics.draw('pad-area', 'top-left', x, y, padAreaAlpha)
     graphics.draw('line', 'top-left', x, y, lineAlpha)
+  }
+
+  function drawForceFields(data, frame) {
+
+    var offset = sin(frame / 8) * 2
+
+    grid.forEachCell(data, function (cell, x, y) {
+
+      if (cell.force !== 'none') {
+
+        if (cell.force === 'left') {
+
+          x = x - offset
+          graphics.draw('force-left', 'top-left', x, y, forceAlpha)
+
+        } else {
+
+          x = x + offset
+          graphics.draw('force-right', 'top-left', x, y, forceAlpha)
+        }
+      }
+    })
   }
 
   var brickImage = {
@@ -197,6 +220,8 @@ define(['./effect', './graphics', './grid', 'exports'], function (effect
     drawBallShadow(data.ball)
     drawPadShadow(data.pad)
     drawBrickShadows(data.grid)
+
+    drawForceFields(data.grid, data.frame)
 
     drawBall(data.ball)
     drawPad(data.pad)

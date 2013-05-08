@@ -68,6 +68,8 @@ define({
 
       nCells   : { x: 8, y: 6 }
     , cellSize : 24
+    
+    , forceMagnitude : 0.001
 
     , cells:
       [ [ { brick: 'none', force: 'none', effect: 'none', frame: 0 }

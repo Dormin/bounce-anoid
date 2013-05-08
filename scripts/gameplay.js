@@ -7,7 +7,6 @@ define(['./ball', './brick', './edge', './effect', './grid', './pad'
 
   var clamp    = utilities.clamp
     , forEach  = utilities.forEach
-    , forRange = utilities.forRange
     , integer  = utilities.integer
     , repeat   = utilities.repeat
 
@@ -118,6 +117,27 @@ define(['./ball', './brick', './edge', './effect', './grid', './pad'
     handleBallBrickCollision(ballData, collisionData, frame)
   }
 
+  //
+  // Ball force interaction
+  //
+
+  function handleBallForceInteraction(ballData, gridData) {
+
+    var x = integer(ballData.position.x / gridData.cellSize)
+      , y = integer(ballData.position.y / gridData.cellSize)
+
+    if (x >= 0 && x < gridData.nCells.x && y >= 0 && y < gridData.nCells.y) {
+
+      switch (gridData.cells[y][x].force) {
+        case 'left':
+          ballData.velocity.x -= gridData.forceMagnitude
+          break
+        case 'right':
+          ballData.velocity.x += gridData.forceMagnitude
+          break
+      }
+    }
+  }
 
   //
   // Gameplay
@@ -142,6 +162,7 @@ define(['./ball', './brick', './edge', './effect', './grid', './pad'
     handleBallPadInteraction(data.ball, data.pad)
     handleBallEdgesInteraction(data.ball, data.edges)
     handleBallBricksInteraction(data.ball, data.grid, frame)
+    handleBallForceInteraction(data.ball, data.grid)
   }
 
   function tick(data, input) {

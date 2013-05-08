@@ -76,7 +76,21 @@ define(['./utilities', 'exports'], function (utilities, exports) {
         cell.brick = brickTypes[integer(random() * brickTypes.length)]
       }
 
-      cell.force = 'none'
+      if (random() > 1/8) {
+
+        cell.force = 'none'
+
+      } else {
+
+        if (random() > 1/2) {
+
+          cell.force = 'left'
+
+        } else {
+
+          cell.force = 'right'
+        }
+      }
 
       cell.fx    = 'none'
       cell.frame = 0

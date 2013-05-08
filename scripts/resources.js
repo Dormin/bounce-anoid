@@ -20,6 +20,8 @@ define({
   , 'effect-bounce-1'    : 'resources/images/effect-bounce-1.png'
   , 'effect-flicker'     : 'resources/images/effect-flicker.png'
   , 'effect-scatter'     : 'resources/images/effect-scatter.png'
+  , 'force-left'         : 'resources/images/force-left.png'
+  , 'force-right'        : 'resources/images/force-right.png'
   , 'line'               : 'resources/images/line.png'
   , 'pad'                : 'resources/images/pad.png'
   , 'pad-area'           : 'resources/images/pad-area.png'
