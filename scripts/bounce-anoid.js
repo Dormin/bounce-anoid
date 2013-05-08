@@ -1,14 +1,13 @@
-define(['./data', './draw', './gameplay', './graphics', './input', './resources'
-, './utilities', 'exports'], function (data, draw, gameplay, graphics, input
-, resources, utilities, exports) {
+define(['./graphics', './input', './state', './utilities', 'exports']
+, function (graphics, input, state, utilities, exports) {
 // ----------------------------------------------------------------------------
 
   var eachFrame = utilities.eachFrame
 
   function tick() {
 
-    gameplay.tick(data.gameplay, input.read())
-    draw.gameplay(data.gameplay)
+    state.tick()
+    state.render()
   }
 
   function run(canvas) {
@@ -16,11 +15,9 @@ define(['./data', './draw', './gameplay', './graphics', './input', './resources'
     input.setup(canvas)
     graphics.setup(canvas)
 
-    graphics.load(resources.images, function () {
+    state.set('load-resources')
 
-      gameplay.reset(data.gameplay)
-      eachFrame(tick)
-    })
+    eachFrame(tick)
   }
   exports.run = run
 
