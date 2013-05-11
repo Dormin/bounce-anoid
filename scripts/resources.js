@@ -24,7 +24,6 @@ define({
   , 'force-right'        : 'resources/images/force-right.png'
   , 'line'               : 'resources/images/line.png'
   , 'pad'                : 'resources/images/pad.png'
-  , 'pad-area'           : 'resources/images/pad-area.png'
   , 'shadow-ball'        : 'resources/images/shadow-ball.png'
   , 'shadow-bounce'      : 'resources/images/shadow-bounce.png'
   , 'shadow-brick-0'     : 'resources/images/shadow-brick-0.png'

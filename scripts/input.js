@@ -3,7 +3,12 @@ define(['exports'], function (exports) {
 
   "use strict"
 
-  var input = { x: 0, y: 0 }
+  var state = {
+    x: 0
+  , y: 0
+  , pressed: false
+  }
+  exports.state = state
 
   function setup(canvas) {
 
@@ -15,17 +20,21 @@ define(['exports'], function (exports) {
 
       rect = canvas.getBoundingClientRect()
 
-      input.x = event.clientX - rect.left
-      input.y = event.clientY - rect.top
+      state.x = event.clientX - rect.left
+      state.y = event.clientY - rect.top
+    }
+
+    window.onmousedown = function () {
+
+      state.pressed = true
+    }
+
+    window.onmouseup = function () {
+
+      state.pressed = false
     }
   }
   exports.setup = setup
-
-  function read() {
-
-    return input
-  }
-  exports.read = read
 
 // ----------------------------------------------------------------------------
 })

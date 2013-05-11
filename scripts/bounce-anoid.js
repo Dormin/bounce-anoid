@@ -1,23 +1,21 @@
-define(['./graphics', './input', './state', './utilities', 'exports']
-, function (graphics, input, state, utilities, exports) {
+define(['./gameflow', './graphics', './input', './resources', './utilities'
+, 'exports'], function (gameflow, graphics, input, resources, utilities
+, exports) {
 // ----------------------------------------------------------------------------
 
+  "use strict"
+  
   var eachFrame = utilities.eachFrame
-
-  function tick() {
-
-    state.tick()
-    state.render()
-  }
 
   function run(canvas) {
 
     input.setup(canvas)
     graphics.setup(canvas)
 
-    state.set('load-resources')
+    graphics.load(resources.images, function () {
 
-    eachFrame(tick)
+      eachFrame(gameflow.tick)
+    })
   }
   exports.run = run
 

@@ -10,7 +10,16 @@ define(['./utilities', 'exports'], function (utilities, exports) {
   var context
     , images = {}
 
+  var view = {
+    width  : 0
+  , height : 0
+  }
+  exports.view = view
+
   function setup(canvas) {
+
+    view.width  = canvas.width
+    view.height = canvas.height
 
     context = canvas.getContext('2d')
   }
@@ -36,11 +45,17 @@ define(['./utilities', 'exports'], function (utilities, exports) {
   }
   exports.load = load
 
-  function draw(name, align, x, y, alpha) {
+  function setAlpha(alpha) {
+
+    context.globalAlpha = alpha
+  }
+  exports.setAlpha = setAlpha
+
+  function draw(name, align, x, y) {
 
     var image = images[name]
 
-    if (!image || alpha <= 0) { return }
+    if (!image) { return }
 
     x = x || 0
     y = y || 0
@@ -51,10 +66,18 @@ define(['./utilities', 'exports'], function (utilities, exports) {
       y -= image.height / 2
     }
 
-    context.globalAlpha = alpha || 1
     context.drawImage(image, integer(x), integer(y))
   }
   exports.draw = draw
+
+  function drawRectangle(color, x, y, width, height) {
+
+    context.fillStyle = color
+    context.beginPath()
+    context.rect(integer(x), integer(y), integer(width), integer(height))
+    context.fill()
+  }
+  exports.drawRectangle = drawRectangle
 
 // ----------------------------------------------------------------------------
 })

@@ -1,31 +1,66 @@
-define(['./utilities', 'exports'], function (utilities, exports) {
+define(['./graphics', './shadow', './utilities', 'exports'], function (graphics
+, shadow, utilities, exports) {
 // ----------------------------------------------------------------------------
 
   "use strict"
 
-  var max  = Math.max
+  var cos  = Math.cos
+    , max  = Math.max
+    , sin  = Math.sin
     , sqrt = Math.sqrt
 
   var clamp = utilities.clamp
 
-  function reset(data) {
+  //
+  // Constants
+  //
 
-    data.position.x = data.start.x
-    data.position.y = data.start.y
-    data.position.a = data.start.a
+  var GRAVITY = 0.003
+    , DRAG    = 0.002
+    , INERTIA = 2/5
+    , RADIUS  = 6
+    , START   = { x: 96, y: 156, a: 0 }
 
-    data.velocity.x = 0
-    data.velocity.y = 0
-    data.velocity.a = 0
+  exports.RADIUS = RADIUS
+
+  var DOT_ALPHA = 0.25
+
+  //
+  // Variables
+  //
+
+  var active   = false
+    , position = { x: 0, y: 0, a: 0 } // Position and angle
+    , velocity = { x: 0, y: 0, a: 0 } // Linear and angular velocity
+
+  exports.position = position
+  exports.velocity = velocity
+
+  //
+  // Logic
+  //
+
+  function reset() {
+
+    active = false
+
+    position.x = START.x
+    position.y = START.y
+    position.a = START.a
+
+    velocity.x = 0
+    velocity.y = 0
+    velocity.a = 0
   }
   exports.reset = reset
 
-  function step(data) {
 
-    var g = data.gravity
-      , d = data.drag
-      , p = data.position
-      , v = data.velocity
+  function step() {
+
+    var g = GRAVITY
+      , d = DRAG
+      , p = position
+      , v = velocity
 
     // Apply gravity
     v.y += g
@@ -42,27 +77,27 @@ define(['./utilities', 'exports'], function (utilities, exports) {
   }
   exports.step = step
 
-  function pushOut(ballData, collisionData) {
+  function pushOut(collision) {
 
-    var p  = ballData.position
-      , d  = collisionData.d
-      , nx = collisionData.nx
-      , ny = collisionData.ny
+    var p  = position
+      , d  = collision.d
+      , nx = collision.nx
+      , ny = collision.ny
 
     p.x += nx * d
     p.y += ny * d
   }
   exports.pushOut = pushOut
 
-  function bounce(ballData, collisionData, elasticity, friction) {
+  function bounce(collision, elasticity, friction) {
 
-    var v  = ballData.velocity
-      , i  = ballData.inertia
-      , r  = ballData.radius
+    var i  = INERTIA
+      , r  = RADIUS
       , e  = elasticity
       , u  = friction
-      , nx = collisionData.nx
-      , ny = collisionData.ny
+      , v  = velocity
+      , nx = collision.nx
+      , ny = collision.ny
       , vx = v.x * nx + v.y * ny  // Transformed velocity x
       , vy = v.x * -ny + v.y * nx // Transformed velocity y
       , ff = clamp((v.a * r - vy) / (1 + 1 / i / r), -u, u) // Frictional force
@@ -81,6 +116,52 @@ define(['./utilities', 'exports'], function (utilities, exports) {
     v.y = vx * ny + vy * nx
   }
   exports.bounce = bounce
+
+  function isActive() {
+
+    return active
+  }
+  exports.isActive = isActive
+
+  function activate() {
+
+    active = true
+  }
+  exports.activate = activate
+
+  function applyForce(fx, fy) {
+
+    velocity.x += fx
+    velocity.y += fy
+  }
+  exports.applyForce = applyForce
+
+  //
+  // Visuals
+  //
+
+  function draw() {
+
+    var r = RADIUS
+      , x = position.x
+      , y = position.y
+      , a = position.a
+
+    graphics.draw('ball', 'center', x, y)
+
+    x += cos(a) * r / 2
+    y += sin(a) * r / 2
+    graphics.setAlpha(DOT_ALPHA)
+    graphics.draw('dot', 'center', x, y)
+    graphics.setAlpha(1)
+  }
+  exports.draw = draw
+
+  function drawShadow() {
+
+    shadow.draw('shadow-ball', 'center', position.x, position.y)
+  }
+  exports.drawShadow = drawShadow
 
 // ----------------------------------------------------------------------------
 })

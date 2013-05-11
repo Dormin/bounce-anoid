@@ -3,6 +3,11 @@ define(['exports'], function (exports) {
 
   "use strict"
 
+  var ceil  = Math.ceil
+    , floor = Math.floor
+    , max   = Math.max
+    , min   = Math.min
+
   //
   // Various utility functions
   //
@@ -10,9 +15,9 @@ define(['exports'], function (exports) {
   //
   // Clamp a number to the given range
   //
-  function clamp(n, min, max) {
+  function clamp(n, lower, upper) {
 
-    return Math.min(Math.max(n, min), max)
+    return min(max(n, lower), upper)
   }
   exports.clamp = clamp
 
@@ -106,7 +111,7 @@ define(['exports'], function (exports) {
   //
   function integer(n) {
 
-    return (n < 0)? Math.ceil(n) : Math.floor(n)
+    return n < 0 ? ceil(n) : floor(n)
   }
   exports.integer = integer
 
