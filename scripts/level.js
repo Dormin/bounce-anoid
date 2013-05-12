@@ -2,6 +2,8 @@ define(['./grid', './utilities', 'exports'], function(grid, utilities
 , exports) {
 // ----------------------------------------------------------------------------
 
+  "use strict"
+
   var random = Math.random
 
   var integer = utilities.integer
