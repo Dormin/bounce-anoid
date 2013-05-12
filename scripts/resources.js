@@ -2,6 +2,7 @@ define({
   images: {
     'background'         : 'resources/images/background.png'
   , 'ball'               : 'resources/images/ball.png'
+  , 'ball-light'         : 'resources/images/ball-light.png'
   , 'brick-bounce'       : 'resources/images/brick-bounce.png'
   , 'brick-color-1'      : 'resources/images/brick-color-1.png'
   , 'brick-color-2'      : 'resources/images/brick-color-2.png'

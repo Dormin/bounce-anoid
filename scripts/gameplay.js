@@ -42,6 +42,7 @@ define(['./ball', './edges', './graphics', './grid', './pad', './utilities'
 
   function tick() {
 
+    ball.tick()
     pad.tick(STEPS_PER_TICK)
     grid.tick()
 

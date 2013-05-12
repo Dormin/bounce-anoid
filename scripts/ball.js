@@ -23,13 +23,15 @@ define(['./graphics', './shadow', './utilities', 'exports'], function (graphics
 
   exports.RADIUS = RADIUS
 
-  var DOT_ALPHA = 0.25
+  var APPEAR_DURATION = 40
+    , DOT_ALPHA       = 0.25
 
   //
   // Variables
   //
 
-  var active   = false
+  var state    = 'inactive'
+    , frame    = 0
     , position = { x: 0, y: 0, a: 0 } // Position and angle
     , velocity = { x: 0, y: 0, a: 0 } // Linear and angular velocity
 
@@ -42,7 +44,8 @@ define(['./graphics', './shadow', './utilities', 'exports'], function (graphics
 
   function reset() {
 
-    active = false
+    state = 'inactive'
+    frame = 0
 
     position.x = START.x
     position.y = START.y
@@ -76,6 +79,20 @@ define(['./graphics', './shadow', './utilities', 'exports'], function (graphics
     p.a += v.a
   }
   exports.step = step
+
+  function tick() {
+
+    if (state === 'appearing') {
+
+      if (frame >= APPEAR_DURATION) {
+
+        state = 'active'
+      }
+
+      frame++
+    }
+  }
+  exports.tick = tick
 
   function pushOut(collision) {
 
@@ -119,13 +136,14 @@ define(['./graphics', './shadow', './utilities', 'exports'], function (graphics
 
   function isActive() {
 
-    return active
+    return state === 'active'
   }
   exports.isActive = isActive
 
   function activate() {
 
-    active = true
+    frame = 0
+    state = 'appearing'
   }
   exports.activate = activate
 
@@ -140,7 +158,7 @@ define(['./graphics', './shadow', './utilities', 'exports'], function (graphics
   // Visuals
   //
 
-  function draw() {
+  function drawBall() {
 
     var r = RADIUS
       , x = position.x
@@ -155,11 +173,43 @@ define(['./graphics', './shadow', './utilities', 'exports'], function (graphics
     graphics.draw('dot', 'center', x, y)
     graphics.setAlpha(1)
   }
+
+  function drawAppearing() {
+
+    if (frame > APPEAR_DURATION / 4 * 3) { drawBall() }
+
+    if (frame % 4 === 0) {
+
+      graphics.setAlpha(frame / APPEAR_DURATION)
+      graphics.draw('ball-light', 'center', position.x, position.y)
+      graphics.setAlpha(1)
+    }
+
+    if (frame % 16 === 0) {
+
+      graphics.draw('ball-light', 'center', position.x, position.y)
+    }
+  }
+
+  function draw() {
+
+    switch (state) {
+      case 'active':
+        drawBall()
+        break
+      case 'appearing':
+        drawAppearing()
+        break
+    }
+  }
   exports.draw = draw
 
   function drawShadow() {
 
-    shadow.draw('shadow-ball', 'center', position.x, position.y)
+    if (state === 'active') {
+
+      shadow.draw('shadow-ball', 'center', position.x, position.y)
+    }
   }
   exports.drawShadow = drawShadow
 
