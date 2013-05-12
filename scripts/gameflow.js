@@ -1,5 +1,5 @@
-define(['./ball', './gameplay', './transition', 'exports'], function (ball
-, gameplay, transition, exports) {
+define(['./ball', './gameplay', './level', './transition', 'exports']
+, function (ball, gameplay, level, transition, exports) {
 // ----------------------------------------------------------------------------
 
   "use strict"
@@ -22,7 +22,16 @@ define(['./ball', './gameplay', './transition', 'exports'], function (ball
 
     , execute: function () {
 
+        var levelData = window.prompt('Enter level data:')
+
         gameplay.reset()
+
+        if (levelData) {
+          level.read(levelData)
+        } else {
+          level.randomize()
+        }
+
         transition.init()
 
         return 'gameplay-fade-in'

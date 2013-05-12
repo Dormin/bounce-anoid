@@ -21,8 +21,7 @@ define(['./ball', './edges', './graphics', './grid', './pad', './utilities'
 
     ball.reset()
     pad.reset()
-
-    grid.randomize()
+    grid.reset()
   }
   exports.reset = reset
 

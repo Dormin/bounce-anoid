@@ -96,6 +96,7 @@ define(['./brick', './effect', './force', './graphics', './shadow'
       })
     })
   }
+  exports.forEachCell = forEachCell
 
   function forEachCellIn(left, right, top, bottom, iterator) {
 
@@ -128,45 +129,6 @@ define(['./brick', './effect', './force', './graphics', './shadow'
     })
   }
   exports.reset = reset
-
-  var brickTypes = ['solid-0', 'solid-1', 'solid-2', 'solid-3', 'solid-4'
-  , 'fallthrough', 'bounce', 'color-1', 'color-2', 'color-3', 'color-4'
-  , 'color-5', 'glass']
-
-  function randomize() {
-
-    forEachCell(function (cell) {
-
-      if (random() > 1/4) {
-
-        cell.brick = 'none'
-        
-      } else {
-
-        cell.brick = brickTypes[integer(random() * brickTypes.length)]
-      }
-
-      if (random() > 1/8) {
-
-        cell.force = 'none'
-
-      } else {
-
-        if (random() > 1/2) {
-
-          cell.force = 'left'
-
-        } else {
-
-          cell.force = 'right'
-        }
-      }
-
-      cell.fx    = 'none'
-      cell.frame = 0
-    })
-  }
-  exports.randomize = randomize
 
   function tick() {
 
