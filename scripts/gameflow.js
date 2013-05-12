@@ -25,11 +25,11 @@ define(['./ball', './gameplay', './transition', 'exports'], function (ball
         gameplay.reset()
         transition.init()
 
-        return 'gameplay-fadein'
+        return 'gameplay-fade-in'
       }
     }
 
-  , 'gameplay-fadein': {
+  , 'gameplay-fade-in': {
 
       type: 'state'
 
@@ -38,17 +38,26 @@ define(['./ball', './gameplay', './transition', 'exports'], function (ball
         gameplay.tick()
         transition.tick()
 
-        if (transition.complete()) {
-
-          ball.activate()
-          return 'gameplay'
-        }
+        if (transition.complete()) { return 'gameplay-spawn-ball' }
       }
 
     , draw: function (frame) {
 
         gameplay.draw()
         transition.draw()
+      }
+    }
+
+  , 'gameplay-spawn-ball': {
+
+      type: 'action'
+
+    , execute: function () {
+
+        ball.reset()
+        ball.activate()
+
+        return 'gameplay'
       }
     }
 
@@ -59,6 +68,8 @@ define(['./ball', './gameplay', './transition', 'exports'], function (ball
     , tick: function () {
 
         gameplay.tick()
+
+        if (gameplay.ballIsOut()) { return 'gameplay-spawn-ball' }
       }
 
     , draw: function () {
@@ -72,13 +83,16 @@ define(['./ball', './gameplay', './transition', 'exports'], function (ball
 
   function tick() {
 
+    var next
+
     while (current.type === 'action') {
 
       current = nodes[current.execute()]
     }
 
-    current = nodes[current.tick()] || current
+    next = current.tick()
     current.draw()
+    current = nodes[next] || current
   }
   exports.tick = tick
 

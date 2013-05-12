@@ -142,8 +142,8 @@ define(['./graphics', './shadow', './utilities', 'exports'], function (graphics
 
   function activate() {
 
-    frame = 0
     state = 'appearing'
+    frame = 0
   }
   exports.activate = activate
 

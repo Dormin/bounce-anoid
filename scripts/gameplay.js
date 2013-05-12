@@ -50,6 +50,12 @@ define(['./ball', './edges', './graphics', './grid', './pad', './utilities'
   }
   exports.tick = tick
 
+  function ballIsOut() {
+
+    return ball.position.y - ball.RADIUS > graphics.view.height
+  }
+  exports.ballIsOut = ballIsOut
+
   //
   // Visuals
   //
